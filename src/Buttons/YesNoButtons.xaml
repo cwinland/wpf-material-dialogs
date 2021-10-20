@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="wpf_material_dialogs.Buttons.YesNoButtons"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+			 xmlns:forms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+			 Height="32"
+			 Width="160">
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition />
+			<ColumnDefinition />
+		</Grid.ColumnDefinitions>
+		<Button  Grid.Column="0"
+				 Content="_No"
+				 Margin="0 0 3 0"
+				 Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+				 CommandParameter="{x:Static forms:DialogResult.No}" />
+		<Button  Grid.Column="1"
+				 Content="_Yes"
+				 Margin="3 0 0 0"
+				 Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+				 CommandParameter="{x:Static forms:DialogResult.Yes}" />
+	</Grid>
+</UserControl>

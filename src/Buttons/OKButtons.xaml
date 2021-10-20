@@ -1,0 +1,16 @@
+﻿<UserControl x:Class="wpf_material_dialogs.Buttons.OkButtons"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+			 xmlns:forms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+			 Height="32"
+			 Width="80">
+    <Grid>
+		<Button Grid.Column="0"
+                Grid.Row="0"
+                Margin="0 0 3 0"
+            Content="_OK"
+				Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+				CommandParameter="{x:Static forms:DialogResult.OK}" />
+	</Grid>
+</UserControl>

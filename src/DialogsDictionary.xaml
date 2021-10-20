@@ -1,0 +1,73 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                    xmlns:dialogs="clr-namespace:wpf_material_dialogs.Dialogs">
+    <DataTemplate DataType="{x:Type dialogs:DialogBase}">
+                               <Grid>
+                        <Grid.RowDefinitions>
+                            <!--Title row-->
+                            <RowDefinition Height="36" />
+                            <!--Separator row-->
+                            <RowDefinition Height="Auto" />
+                            <!--Icon, Supporting text row-->
+                            <RowDefinition Height="*" />
+                            <!--Buttons row-->
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="4" />
+                            <!-- Icon column-->
+                            <ColumnDefinition Width="Auto" />
+                            <!--Title,Supporting text, and Buttons column -->
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="4" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Row="0"
+                                   Grid.Column="1"
+                                   Grid.ColumnSpan="2"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Center"
+                                   Margin="3 3 3 0"
+                                   FontSize="{Binding TitleFontSize}"
+                                   TextTrimming="CharacterEllipsis" Style="{StaticResource  MaterialDesignHeadline6TextBlock}"
+                                   Text="{Binding Title}" />
+                        <Separator Grid.Row="1"
+                                   Grid.Column="1"
+                                   Grid.ColumnSpan="2"
+                                   Height="5"
+                                   VerticalAlignment="Center"
+                                   Style="{DynamicResource MaterialDesignSeparator}" />
+
+                        <materialDesign:PackIcon Grid.Row="2"
+                                                 Grid.Column="1"
+                                                 Margin="3 3 3 5"
+                                                 Foreground="{Binding IconBrush}"
+                                                 Kind="{Binding IconKind}"
+                                                 Visibility="{Binding ShowIcon,Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                 HorizontalAlignment="Stretch"
+                                                 VerticalAlignment="Center"
+                                                 Width="32"
+                                                 Height="32" />
+                        <TextBlock Grid.Row="2"
+                                   Grid.Column="2"
+                                   Margin="5 5"
+                                   TextWrapping="Wrap"
+                                   VerticalAlignment="Center"
+                                   TextTrimming="CharacterEllipsis"
+                                   Text="{Binding Text}"
+                                   FontSize="{Binding TextFontSize}"
+                                   Style="{DynamicResource MaterialDesignBody2TextBlock}" />
+
+                        <ContentControl Grid.Row="3"
+                                        Grid.Column="1"
+                                        Grid.ColumnSpan="2"
+                                        Margin="3 10 3 5"
+                                        Height="33"
+                                        VerticalContentAlignment="Bottom"
+                                        HorizontalAlignment="{Binding ButtonAlignment}"
+                                        Content="{Binding SelectedButtons}" materialDesign:ThemeAssist.Theme="Inherit"
+                                        />
+                        
+                    </Grid>
+    </DataTemplate>
+</ResourceDictionary>
