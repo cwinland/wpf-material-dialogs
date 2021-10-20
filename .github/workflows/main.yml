@@ -48,12 +48,9 @@ jobs:
         Configuration: ${{ matrix.configuration }}
 
     # Nuget        
-    - name: Build
-      run: dotnet build --configuration Release --no-restore
-      working-directory: ./src
     - name: Publish Cron
       uses: brandedoutcast/publish-nuget@v2.5.5
       with:
-        PROJECT_FILE_PATH: src/AppConfigSettings.csproj
+        PROJECT_FILE_PATH: $env:Wap_Project_Path
         TAG_FORMAT: '*'  
         NUGET_KEY: ${{secrets.NUGET_API_KEY}}
