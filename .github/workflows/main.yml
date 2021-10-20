@@ -19,7 +19,7 @@ jobs:
       Solution_Name: wpf-material-dialogs.sln                        # Replace with your solution name, i.e. MyWpfApp.sln.
       Test_Project_Path: wpf-material-dialogs.test\wpf-material-dialogs.test.csproj               # Replace with the path to your test project, i.e. MyWpfApp.Tests\MyWpfApp.Tests.csproj.
       Wap_Project_Directory: src    # Replace with the Wap project directory relative to the solution, i.e. MyWpfApp.Package.
-      Wap_Project_Path: src\wpf-material-dialogs.csproj
+      Wap_Project_Path: src/wpf-material-dialogs.csproj
 
     steps:
     - name: Checkout
@@ -48,7 +48,7 @@ jobs:
         Configuration: ${{ matrix.configuration }}
 
     # Nuget        
-    - name: Publish Cron
+    - name: Publish NuGet
       uses: brandedoutcast/publish-nuget@v2.5.5
       with:
         PROJECT_FILE_PATH: $env:Wap_Project_Path
