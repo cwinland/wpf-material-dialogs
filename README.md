@@ -1,6 +1,6 @@
 # wpf-material-dialogs
 
-Common and customizable dialogs made easier in WPF using [MaterialDesignThemes](/MaterialDesignInXAML/MaterialDesignInXamlToolkit).
+Common and customizable dialogs made easier in WPF using [MaterialDesignThemes](https://github.com/MaterialDesignInXAML/MaterialDesignInXamlToolkit).
 
 ## Targets
 
