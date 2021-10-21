@@ -9,7 +9,7 @@ Common and customizable dialogs made easier in WPF using [MaterialDesignThemes](
 
 ## How-To Quick-Start
 
-### Define required resources dictionary
+### Define required resource dictionary
 
 Define the required resources.
 
