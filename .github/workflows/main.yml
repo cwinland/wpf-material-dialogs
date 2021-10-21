@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master # Default release branch
+    paths:
+      - 'src/**'
 jobs:
 
   build:
