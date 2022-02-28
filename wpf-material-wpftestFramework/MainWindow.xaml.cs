@@ -15,6 +15,7 @@ namespace wpf_material_wpftestFramework
         public MainWindow() => InitializeComponent();
 
         /// <inheritdoc />
+        // ReSharper disable once AsyncVoidMethod
         protected override async void OnContentRendered(EventArgs e)
         {
             base.OnContentRendered(e);

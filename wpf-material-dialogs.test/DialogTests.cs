@@ -2,6 +2,7 @@ using FluentAssertions;
 using MaterialDesignThemes.Wpf;
 using NUnit.Framework;
 using System;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -16,16 +17,26 @@ namespace wpf_material_dialogs.test
     [Apartment(ApartmentState.STA)]
     public class DialogTestBase<TDialog> : IDisposable where TDialog : IDialog, new()
     {
-        private DialogHost _dialogHost;
-        private IDialog _testDialog;
+        private DialogHost dialogHost;
+        private IDialog testDialog;
 
         [SetUp]
         public void SetupTests()
         {
-            _dialogHost = new DialogHost();
-            _dialogHost.RaiseEvent(new RoutedEventArgs(FrameworkElement.LoadedEvent));
+            var mi = typeof(DialogHost).GetMethod("GetInstance", BindingFlags.NonPublic | BindingFlags.Static);
+            try
+            {
+                dialogHost = mi.Invoke(null, new object[] { null }) as DialogHost;
+            }
+            catch
+            {
+                // ignore
+            }
 
-            _testDialog = new TDialog
+            dialogHost ??= new DialogHost();
+            dialogHost?.RaiseEvent(new RoutedEventArgs(FrameworkElement.LoadedEvent));
+            //_dialogHost.Identifier = hostId;
+            testDialog = new TDialog
             {
                 Title = "Test Title",
                 Text = "Test Text",
@@ -36,19 +47,19 @@ namespace wpf_material_dialogs.test
             };
         }
 
-        public void Dispose() => _dialogHost.RaiseEvent(new RoutedEventArgs(FrameworkElement.UnloadedEvent));
+        public void Dispose() => dialogHost?.RaiseEvent(new RoutedEventArgs(FrameworkElement.UnloadedEvent));
 
         [Test]
         public void CanOpenAndCloseDialogWithShowDialogIsOpen()
         {
-            _dialogHost.IsOpen = false;
-            Assert.False(_dialogHost.IsOpen);
-            _testDialog.ShowDialog();
-            var session = _dialogHost.CurrentSession;
+            dialogHost.IsOpen = false;
+            Assert.False(dialogHost.IsOpen);
+            testDialog.ShowDialog();
+            var session = dialogHost.CurrentSession;
             session?.IsEnded.Should().BeFalse();
-            _dialogHost.IsOpen = false;
-            _dialogHost.IsOpen.Should().BeFalse();
-            _dialogHost.CurrentSession.Should().BeNull();
+            dialogHost.IsOpen = false;
+            dialogHost.IsOpen.Should().BeFalse();
+            dialogHost.CurrentSession.Should().BeNull();
             session?.IsEnded.Should().BeTrue();
         }
 
@@ -56,55 +67,56 @@ namespace wpf_material_dialogs.test
         public async Task CanOpenAndCloseDialogWithShowMethodDialogResult()
         {
             var id = Guid.NewGuid();
-            _dialogHost.Identifier = id;
+            dialogHost.Identifier = id;
 
-            var result = await OpenTestDialog(_testDialog, (sender, args) => args.Session.Close(DialogResult.Ignore));
+            var result = await OpenTestDialog(testDialog, (sender, args) => args.Session.Close(DialogResult.Ignore));
 
             result.Should().Be(DialogResult.Ignore);
-            _dialogHost.IsOpen.Should().BeFalse();
+            dialogHost.IsOpen.Should().BeFalse();
         }
 
         [Test]
         public async Task CanOpenAndCloseDialogWithShowMethodAnyObject()
         {
-            var result = await OpenTestDialogObject(_testDialog, (sender, args) => args.Session.Close(42));
+            var result = await OpenTestDialogObject(testDialog, (sender, args) => args.Session.Close(42));
 
             result.Should().Be(42);
-            _dialogHost.IsOpen.Should().BeFalse();
+            dialogHost.IsOpen.Should().BeFalse();
         }
 
         [Test]
         public async Task CanOpenDialogWithShowMethodAndCloseWithIsOpen()
         {
-            var result = await OpenTestDialogObject(_testDialog, (sender, args) => _dialogHost.IsOpen = false);
+            var result = await OpenTestDialogObject(testDialog, (sender, args) => dialogHost.IsOpen = false);
 
             result.Should().BeNull();
-            _dialogHost.IsOpen.Should().BeFalse();
+            dialogHost.IsOpen.Should().BeFalse();
         }
 
         [Test]
         public async Task CanCloseDialogWithRoutedEvent()
         {
             var closeParameter = Guid.NewGuid();
-            var showTask = OpenTestDialogObject(_testDialog);
+            var showTask = OpenTestDialogObject(testDialog);
 
-            var session = _dialogHost.CurrentSession;
-            Assert.False(session?.IsEnded);
+            var session = dialogHost.CurrentSession;
+            Assert.False(session?.IsEnded ?? false);
 
-            DialogHost.CloseDialogCommand.Execute(closeParameter, _dialogHost);
-
-            Assert.False(_dialogHost.IsOpen);
-            Assert.Null(_dialogHost.CurrentSession);
-            Assert.True(session?.IsEnded);
+            DialogHost.CloseDialogCommand.Execute(closeParameter, dialogHost);
+            Thread.Sleep(200);
+            Assert.False(dialogHost.IsOpen);
+            Assert.Null(dialogHost.CurrentSession);
+            Assert.True(session?.IsEnded ?? false);
+            Task.WaitAll(showTask);
             Assert.AreEqual(closeParameter, await showTask);
         }
 
         [Test]
         public async Task DialogHostExposesSessionAsProperty() =>
-            await OpenTestDialogObject(_testDialog,
+            await OpenTestDialogObject(testDialog,
                                        (sender, args) =>
                                        {
-                                           Assert.True(ReferenceEquals(args.Session, _dialogHost.CurrentSession));
+                                           Assert.True(ReferenceEquals(args.Session, dialogHost.CurrentSession));
                                            args.Session.Close();
                                        });
 
@@ -112,10 +124,10 @@ namespace wpf_material_dialogs.test
         public async Task WhenNoIdentifierIsSpecifiedItUsesSingleDialogHost()
         {
             var isOpen = false;
-            await OpenTestDialogObject(_testDialog,
+            await OpenTestDialogObject(testDialog,
                                        (sender, args) =>
                                        {
-                                           isOpen = _dialogHost.IsOpen;
+                                           isOpen = dialogHost.IsOpen;
                                            args.Session.Close();
                                        });
             isOpen.Should().BeTrue();
@@ -136,9 +148,9 @@ namespace wpf_material_dialogs.test
                 }
             }
 
-            var dialogTask = OpenTestDialogObject(_testDialog, null, ClosingHandler);
-            _dialogHost.CurrentSession?.Close("FirstResult");
-            _dialogHost.CurrentSession?.Close("SecondResult");
+            var dialogTask = OpenTestDialogObject(testDialog, null, ClosingHandler);
+            dialogHost.CurrentSession?.Close("FirstResult");
+            dialogHost.CurrentSession?.Close("SecondResult");
             var result = await dialogTask;
 
             Assert.AreEqual("SecondResult", result);
@@ -149,41 +161,44 @@ namespace wpf_material_dialogs.test
         public void WhenOpenDialogsAreOpenIsExist()
         {
             var isExist = false;
-            OpenTestDialogObject(_testDialog, (sender, arg) => isExist = DialogHost.IsDialogOpen(_dialogHost.Identifier));
+            OpenTestDialogObject(testDialog, (sender, arg) => isExist = DialogHost.IsDialogOpen(dialogHost.Identifier));
             Assert.True(isExist);
-            DialogHost.Close(_dialogHost.Identifier);
-            Assert.False(DialogHost.IsDialogOpen(_dialogHost.Identifier));
+            DialogHost.Close(dialogHost.Identifier);
+            Assert.False(DialogHost.IsDialogOpen(dialogHost.Identifier));
         }
 
         private async Task<object> OpenTestDialogObject(IDialog dialog, DialogOpenedEventHandler openedAction = null, DialogClosingEventHandler closingAction = null)
         {
-            var id = Guid.NewGuid();
-            _dialogHost.Identifier = id;
-
-            return await dialog.ShowDialogObject(id, openedAction, closingAction);
+            //var id = Guid.NewGuid();
+            //_dialogHost.Identifier = id;
+            return await dialog.ShowDialogObject(dialogHost.Identifier, openedAction, closingAction);
         }
 
         private async Task<DialogResult> OpenTestDialog(IDialog dialog, DialogOpenedEventHandler openedAction = null, DialogClosingEventHandler closingAction = null)
         {
-            var id = Guid.NewGuid();
-            _dialogHost.Identifier = id;
+            //var id = Guid.NewGuid();
+            //_dialogHost.Identifier = id;
 
-            return await dialog.ShowDialog(id, openedAction, closingAction);
+            return await dialog.ShowDialog(dialogHost.Identifier, openedAction, closingAction);
         }
     }
 
+    [Apartment(ApartmentState.STA)]
     public class AlertDialogTests : DialogTestBase<AlertDialog>
     {
     }
 
+    [Apartment(ApartmentState.STA)]
     public class ErrorDialogTests : DialogTestBase<ErrorDialog>
     {
     }
 
+    [Apartment(ApartmentState.STA)]
     public class InfoDialogTests : DialogTestBase<InfoDialog>
     {
     }
 
+    [Apartment(ApartmentState.STA)]
     public class WarningDialogTests : DialogTestBase<WarningDialog>
     {
     }
