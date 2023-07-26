@@ -9,7 +9,12 @@
                                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                                    Foreground="{DynamicResource AttentionToActionBrush}">
             <Grid>
-            
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Command="{Binding OpenDialog, RelativeSource={RelativeSource AncestorType={x:Type Window}}}">Open Test dialog</Button>
+                <Button Grid.Column="1" Command="{Binding OpenDialog2, RelativeSource={RelativeSource AncestorType={x:Type Window}}}">Open Test dialog XAML</Button>
             </Grid>
         </materialDesign:DialogHost>
 </Window>

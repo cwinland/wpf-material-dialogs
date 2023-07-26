@@ -14,8 +14,8 @@ using wpf_material_dialogs.Interfaces;
 
 namespace wpf_material_dialogs.test
 {
-    [Apartment(ApartmentState.STA)]
-    public class DialogTestBase<TDialog> : IDisposable where TDialog : IDialog, new()
+    [NUnit.Framework.Ignore("base class")]
+    internal class DialogTestBase<TDialog> : IDisposable where TDialog : IDialog, new()
     {
         private DialogHost dialogHost;
         private IDialog testDialog;
@@ -184,22 +184,22 @@ namespace wpf_material_dialogs.test
     }
 
     [Apartment(ApartmentState.STA)]
-    public class AlertDialogTests : DialogTestBase<AlertDialog>
+    internal class AlertDialogTests : DialogTestBase<AlertDialog>
     {
     }
 
     [Apartment(ApartmentState.STA)]
-    public class ErrorDialogTests : DialogTestBase<ErrorDialog>
+    internal class ErrorDialogTests : DialogTestBase<ErrorDialog>
     {
     }
 
     [Apartment(ApartmentState.STA)]
-    public class InfoDialogTests : DialogTestBase<InfoDialog>
+    internal class InfoDialogTests : DialogTestBase<InfoDialog>
     {
     }
 
     [Apartment(ApartmentState.STA)]
-    public class WarningDialogTests : DialogTestBase<WarningDialog>
+    internal class WarningDialogTests : DialogTestBase<WarningDialog>
     {
     }
 }

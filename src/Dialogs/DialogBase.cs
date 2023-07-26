@@ -16,13 +16,26 @@ using HorizontalAlignment = System.Windows.HorizontalAlignment;
 
 namespace wpf_material_dialogs.Dialogs
 {
+    /// <inheritdoc />
     /// <summary>
     ///     Class DialogBase.
-    ///     Implements the <see cref="IDialog" />
+    ///     Implements the <see cref="T:wpf_material_dialogs.Interfaces.IDialog" />
     /// </summary>
-    /// <seealso cref="IDialog" />
+    /// <seealso cref="T:wpf_material_dialogs.Interfaces.IDialog" />
     public abstract class DialogBase : IDialog
     {
+        #region Events
+
+        /// <inheritdoc />
+        /// <summary>
+        ///     Occurs when [property changed].
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        #endregion
+
+        #region Fields
+
         private readonly object buttonLock = new();
         private readonly List<Type> buttonTypes = new();
         private HorizontalAlignment buttonAlignment = HorizontalAlignment.Right;
@@ -39,6 +52,10 @@ namespace wpf_material_dialogs.Dialogs
         private double titleFontSize = 16;
         private FontWeight titleFontWeight = FontWeights.Bold;
         private double width = double.NaN;
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         ///     Gets the selected buttons based on the <see cref="DialogButtons" /> selection.
@@ -132,36 +149,6 @@ namespace wpf_material_dialogs.Dialogs
         }
 
         /// <summary>
-        ///     Gets the buttons.
-        /// </summary>
-        /// <param name="button">The button enum to convert to an IButton.</param>
-        /// <returns>IButtons.</returns>
-        /// <exception cref="System.ArgumentOutOfRangeException">button</exception>
-        /// <exception cref="ArgumentOutOfRangeException">button</exception>
-        /// <exception cref="ArgumentOutOfRangeException">button</exception>
-        public IButtons GetButtons(DialogButton button)
-        {
-            lock (buttonLock)
-            {
-                var assembly = Assembly.GetExecutingAssembly();
-
-                if (!buttonTypes?.Any() ?? false)
-                {
-                    buttonTypes.AddRange(assembly
-                        .GetTypes()
-                        .Where(mytype => mytype.GetInterfaces().Contains(typeof(IButtons))));
-                }
-
-                var buttons = buttonTypes
-                    ?.First(mytype => mytype.Name.Equals(button.ToString(), StringComparison.CurrentCultureIgnoreCase));
-
-                return buttons?.FullName != null
-                    ? assembly.CreateInstance(buttons.FullName) as IButtons
-                    : throw new ArgumentOutOfRangeException(nameof(button));
-            }
-        }
-
-        /// <summary>
         ///     Gets or sets the icon brush.
         /// </summary>
         /// <value>The icon brush.</value>
@@ -187,44 +174,6 @@ namespace wpf_material_dialogs.Dialogs
                 iconKind = value;
                 NotifyOfPropertyChanged();
             }
-        }
-
-        /// <summary>
-        ///     Notifies the of property changed.
-        /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
-        public void NotifyOfPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        /// <summary>
-        ///     Shows the dialog with given configuration.
-        /// </summary>
-        /// <param name="dialogHosId">The dialog hos identifier.</param>
-        /// <param name="openedAction">The opened action.</param>
-        /// <param name="closingAction">The closing action.</param>
-        /// <returns><see cref="Tuple{T1,T2}" /> containing <see cref="DialogResult" /> and <see cref="bool" />.</returns>
-        public async Task<DialogResult> ShowDialog(object dialogHosId = null,
-            DialogOpenedEventHandler openedAction = null,
-            DialogClosingEventHandler closingAction = null)
-        {
-            return await DialogHost.Show(this, dialogHosId, openedAction, closingAction) as DialogResult? ??
-                   DialogResult.None;
-        }
-
-        /// <summary>
-        ///     Shows the dialog with given configuration.
-        /// </summary>
-        /// <param name="dialogHosId">The dialog hos identifier.</param>
-        /// <param name="openedAction">The opened action.</param>
-        /// <param name="closingAction">The closing action.</param>
-        /// <returns><see cref="Tuple{T1,T2}" /> containing <see cref="DialogResult" /> and <see cref="bool" />.</returns>
-        public async Task<object> ShowDialogObject(object dialogHosId = null,
-            DialogOpenedEventHandler openedAction = null,
-            DialogClosingEventHandler closingAction = null)
-        {
-            return await DialogHost.Show(this, dialogHosId, openedAction, closingAction);
         }
 
         /// <summary>
@@ -297,10 +246,7 @@ namespace wpf_material_dialogs.Dialogs
             }
         }
 
-        /// <summary>
-        ///     Occurs when [property changed].
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
+        #endregion
 
         /// <summary>
         ///     Shows the destroy alert dialog.
@@ -308,31 +254,28 @@ namespace wpf_material_dialogs.Dialogs
         /// <param name="text">The text.</param>
         /// <param name="buttons">The buttons.</param>
         /// <returns><c>true</c> if <see cref="DialogResult.Yes" />, <c>false</c> otherwise.</returns>
-        public static async Task<DialogResult> ShowAlertDialog(string text, DialogButton buttons)
+        public static async Task<DialogResult> ShowAlertDialog(string text, DialogButton buttons) => await new AlertDialog
         {
-            return await new AlertDialog
-            {
-                Title = "Alert",
-                IconBrush = Brushes.Red,
-                Text = text,
-                DialogButtons = buttons
-            }.ShowDialog();
-        }
+            Title = "Alert",
+            IconBrush = Brushes.Red,
+            Text = text,
+            DialogButtons = buttons,
+        }.ShowDialog();
 
         /// <summary>
         ///     Shows the dialog with a few customizable options.
         /// </summary>
         /// <param name="dialogText">The dialog text.</param>
-        /// <param name="buttons">The footer dialog buttons.</param>
-        /// <param name="title">The dialog title.</param>
+        /// <param name="buttonType">The footer dialog buttons.</param>
+        /// <param name="titleText">The dialog title.</param>
         /// <param name="dialogHosId">The dialog identifier.</param>
         /// <returns><see cref="DialogResult" />.</returns>
-        public async Task<DialogResult> ShowDialog(string dialogText, DialogButton buttons, string title,
+        public async Task<DialogResult> ShowDialog(string dialogText, DialogButton buttonType, string titleText,
             object dialogHosId = null)
         {
-            Title = title;
+            Title = titleText;
             Text = dialogText;
-            DialogButtons = buttons;
+            DialogButtons = buttonType;
 
             return await ShowDialog(dialogHosId);
         }
@@ -341,20 +284,102 @@ namespace wpf_material_dialogs.Dialogs
         ///     Shows the dialog with a few customizable options.
         /// </summary>
         /// <param name="dialogText">The dialog text.</param>
-        /// <param name="buttons">The footer dialog buttons.</param>
-        /// <param name="iconKind">Kind of the icon.</param>
-        /// <param name="iconBrush">The icon brush.</param>
-        /// <param name="title">The dialog title.</param>
+        /// <param name="buttonType">The footer dialog buttons.</param>
+        /// <param name="packIconKind">Kind of the icon.</param>
+        /// <param name="packIconBrush">The icon brush.</param>
+        /// <param name="titleText">The dialog title.</param>
         /// <param name="dialogHosId">The dialog identifier.</param>
         /// <returns><see cref="DialogResult" />.</returns>
-        public async Task<DialogResult> ShowDialog(string dialogText, DialogButton buttons, PackIconKind iconKind,
-            Brush iconBrush, string title, object dialogHosId = null)
+        public async Task<DialogResult> ShowDialog(string dialogText, DialogButton buttonType, PackIconKind packIconKind,
+            Brush packIconBrush, string titleText, object dialogHosId = null)
         {
-            IconKind = iconKind;
+            IconKind = packIconKind;
             ShowIcon = true;
-            IconBrush = iconBrush;
+            IconBrush = packIconBrush;
 
-            return await ShowDialog(dialogText, buttons, title, dialogHosId);
+            return await ShowDialog(dialogText, buttonType, titleText, dialogHosId);
         }
+
+        public static async Task<DialogResult> ShowDialogContent(object content, object dialogHosId = null,
+            DialogOpenedEventHandler openedAction = null,
+            DialogClosingEventHandler closingAction = null)
+            => content == null
+                ? throw new ArgumentNullException(nameof(content))
+                : await DialogHost.Show(content, dialogHosId, openedAction, closingAction) as DialogResult? ?? DialogResult.None;
+
+        #region IDialog
+
+        /// <inheritdoc />
+        /// <summary>
+        ///     Gets the buttons.
+        /// </summary>
+        /// <param name="button">The button enum to convert to an IButton.</param>
+        /// <returns>IButtons.</returns>
+        /// <exception cref="T:System.ArgumentOutOfRangeException">button</exception>
+        /// <exception cref="T:System.ArgumentOutOfRangeException">button</exception>
+        /// <exception cref="T:System.ArgumentOutOfRangeException">button</exception>
+        public IButtons GetButtons(DialogButton button)
+        {
+            // ReSharper disable once PossibleNullReferenceException
+            lock (buttonLock)
+            {
+                var assembly = Assembly.GetExecutingAssembly();
+
+                if (!buttonTypes?.Any() ?? false)
+                {
+                    buttonTypes.AddRange(assembly
+                        .GetTypes()
+                        .Where(mytype => mytype.GetInterfaces().Contains(typeof(IButtons))));
+                }
+
+                var selectedButtonType =
+                    buttonTypes?.First(mytype => button.ToString().Equals(mytype?.Name, StringComparison.CurrentCultureIgnoreCase));
+
+                return selectedButtonType?.FullName != null
+                    ? assembly.CreateInstance(selectedButtonType.FullName) as IButtons
+                    : throw new ArgumentOutOfRangeException(nameof(button));
+            }
+        }
+
+        /// <summary>
+        ///     Notifies the of property changed.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        public void NotifyOfPropertyChanged([CallerMemberName] string propertyName = "") =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+        /// <inheritdoc />
+        /// <summary>
+        ///     Shows the dialog with given configuration.
+        /// </summary>
+        /// <param name="dialogHosId">The dialog hos identifier.</param>
+        /// <param name="openedAction">The opened action.</param>
+        /// <param name="closingAction">The closing action.</param>
+        /// <returns>
+        ///     <see cref="T:System.Tuple`2" /> containing <see cref="T:System.Windows.Forms.DialogResult" /> and
+        ///     <see cref="T:System.Boolean" />.
+        /// </returns>
+        public async Task<DialogResult> ShowDialog(object dialogHosId = null,
+            DialogOpenedEventHandler openedAction = null,
+            DialogClosingEventHandler closingAction = null) =>
+            await DialogHost.Show(this, dialogHosId, openedAction, closingAction) as DialogResult? ??
+            DialogResult.None;
+
+        /// <inheritdoc />
+        /// <summary>
+        ///     Shows the dialog with given configuration.
+        /// </summary>
+        /// <param name="dialogHosId">The dialog hos identifier.</param>
+        /// <param name="openedAction">The opened action.</param>
+        /// <param name="closingAction">The closing action.</param>
+        /// <returns>
+        ///     <see cref="T:System.Tuple`2" /> containing <see cref="T:System.Windows.Forms.DialogResult" /> and
+        ///     <see cref="T:System.Boolean" />.
+        /// </returns>
+        public async Task<object> ShowDialogObject(object dialogHosId = null,
+            DialogOpenedEventHandler openedAction = null,
+            DialogClosingEventHandler closingAction = null) => await DialogHost.Show(this, dialogHosId, openedAction, closingAction);
+
+        #endregion
     }
 }

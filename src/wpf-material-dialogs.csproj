@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
-    <TargetFrameworks>net472;net5.0-windows</TargetFrameworks>
+    <TargetFrameworks>net472;net6.0-windows;net7.0-windows</TargetFrameworks>
     <AssemblyTitle>Material Design WPF Dialogs</AssemblyTitle>
     <UseWindowsForms>true</UseWindowsForms>
     <LangVersion>latest</LangVersion>
