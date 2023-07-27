@@ -52,6 +52,18 @@ namespace wpf_material_dialogs.Dialogs
         private double titleFontSize = 16;
         private FontWeight titleFontWeight = FontWeights.Bold;
         private double width = double.NaN;
+        private bool showButtons = true;
+
+        public bool ShowButtons
+        {
+            get => showButtons;
+            set
+            {
+                showButtons = value;
+                NotifyOfPropertyChanged();
+                NotifyOfPropertyChanged(nameof(SelectedButtons));
+            }
+        }
 
         #endregion
 
@@ -61,9 +73,10 @@ namespace wpf_material_dialogs.Dialogs
         ///     Gets the selected buttons based on the <see cref="DialogButtons" /> selection.
         /// </summary>
         /// <value><see cref="IButtons" />.</value>
-        public IButtons SelectedButtons => DialogButtons == DialogButton.Custom
+        public IButtons SelectedButtons => ShowButtons ? DialogButtons == DialogButton.Custom
             ? Buttons
-            : GetButtons(DialogButtons);
+            : GetButtons(DialogButtons)
+            : null;
 
         public FontWeight TitleFontWeight
         {
@@ -105,10 +118,11 @@ namespace wpf_material_dialogs.Dialogs
             }
         }
 
+        /// <inheritdoc />
         /// <summary>
         ///     Gets or sets the button alignment.
         /// </summary>
-        /// <value><see cref="HorizontalAlignment" />.</value>
+        /// <value><see cref="T:System.Windows.HorizontalAlignment" />.</value>
         public HorizontalAlignment ButtonAlignment
         {
             get => buttonAlignment;
@@ -119,11 +133,12 @@ namespace wpf_material_dialogs.Dialogs
             }
         }
 
+        /// <inheritdoc />
         /// <summary>
-        ///     Gets or sets the custom buttons to be used. <see cref="DialogButtons" /> must set to custom for this property to
+        ///     Gets or sets the custom buttons to be used. <see cref="P:wpf_material_dialogs.Dialogs.DialogBase.DialogButtons" /> must set to custom for this property to
         ///     apply.
         /// </summary>
-        /// <value><see cref="IButtons" />.</value>
+        /// <value><see cref="T:wpf_material_dialogs.Interfaces.IButtons" />.</value>
         public IButtons Buttons
         {
             get => buttons;
@@ -131,13 +146,15 @@ namespace wpf_material_dialogs.Dialogs
             {
                 buttons = value;
                 NotifyOfPropertyChanged();
+                NotifyOfPropertyChanged(nameof(SelectedButtons));
             }
         }
 
+        /// <inheritdoc />
         /// <summary>
         ///     Gets or sets the buttons to use in the dialog.
         /// </summary>
-        /// <value><see cref="DialogButton" />.</value>
+        /// <value><see cref="T:wpf_material_dialogs.Enums.DialogButton" />.</value>
         public DialogButton DialogButtons
         {
             get => dialogButtons;
@@ -145,9 +162,11 @@ namespace wpf_material_dialogs.Dialogs
             {
                 dialogButtons = value;
                 NotifyOfPropertyChanged();
+                NotifyOfPropertyChanged(nameof(SelectedButtons));
             }
         }
 
+        /// <inheritdoc />
         /// <summary>
         ///     Gets or sets the icon brush.
         /// </summary>
@@ -162,6 +181,7 @@ namespace wpf_material_dialogs.Dialogs
             }
         }
 
+        /// <inheritdoc />
         /// <summary>
         ///     Gets or sets the kind of the icon.
         /// </summary>
@@ -176,6 +196,7 @@ namespace wpf_material_dialogs.Dialogs
             }
         }
 
+        /// <inheritdoc />
         /// <summary>
         ///     Gets or sets a value indicating whether to show the icon.
         /// </summary>
@@ -190,6 +211,7 @@ namespace wpf_material_dialogs.Dialogs
             }
         }
 
+        /// <inheritdoc />
         /// <summary>
         ///     Gets or sets the dialog primary text.
         /// </summary>
@@ -204,6 +226,7 @@ namespace wpf_material_dialogs.Dialogs
             }
         }
 
+        /// <inheritdoc />
         /// <summary>
         ///     Gets or sets the size of the text font.
         /// </summary>
@@ -218,6 +241,7 @@ namespace wpf_material_dialogs.Dialogs
             }
         }
 
+        /// <inheritdoc />
         /// <summary>
         ///     Gets or sets the dialog title.
         /// </summary>
@@ -232,6 +256,7 @@ namespace wpf_material_dialogs.Dialogs
             }
         }
 
+        /// <inheritdoc />
         /// <summary>
         ///     Gets or sets the size of the title font.
         /// </summary>
@@ -341,6 +366,7 @@ namespace wpf_material_dialogs.Dialogs
             }
         }
 
+        /// <inheritdoc />
         /// <summary>
         ///     Notifies the of property changed.
         /// </summary>

@@ -203,5 +203,3 @@ namespace wpf_material_dialogs.test
     {
     }
 }
-
-

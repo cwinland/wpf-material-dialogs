@@ -4,17 +4,31 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="Auto">
         <materialDesign:DialogHost Identifier="AlertDialog" CloseOnClickAway="False"  DialogTheme="Inherit" Style="{StaticResource MaterialDesignEmbeddedDialogHost}"
                                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                                    Foreground="{DynamicResource AttentionToActionBrush}">
             <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Command="{Binding OpenDialog, RelativeSource={RelativeSource AncestorType={x:Type Window}}}">Open Test dialog</Button>
-                <Button Grid.Column="1" Command="{Binding OpenDialog2, RelativeSource={RelativeSource AncestorType={x:Type Window}}}">Open Test dialog XAML</Button>
+                <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4">
+                    <CheckBox 
+                        Visibility="Collapsed"
+                        IsChecked="{Binding ShowButtons, Mode=TwoWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Checked="ToggleButton_OnChecked">Show Inner Buttons</CheckBox>
+                    <TextBox Text="{Binding SubtitleText, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
+                </StackPanel>
+                <Button Grid.Row="1" Grid.Column="0" Command="{Binding OpenDialog, RelativeSource={RelativeSource AncestorType={x:Type Window}}}">Open Custom dialog with subtitle</Button>
+                <Button Grid.Row="1" Grid.Column="1" Command="{Binding OpenDialog2, RelativeSource={RelativeSource AncestorType={x:Type Window}}}">Open Test dialog XAML</Button>
+                <Button Grid.Row="1" Grid.Column="2" Command="{Binding OpenContentDialog, RelativeSource={RelativeSource AncestorType={x:Type Window}}}">Open Content dialog with test dialog</Button>
+                <Button Grid.Row="1" Grid.Column="3" Command="{Binding OpenContentDialog2, RelativeSource={RelativeSource AncestorType={x:Type Window}}}">Open Content dialog with custom dialog with subtitle</Button>
             </Grid>
         </materialDesign:DialogHost>
 </Window>

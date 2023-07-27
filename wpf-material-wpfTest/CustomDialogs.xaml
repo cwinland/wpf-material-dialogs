@@ -3,57 +3,45 @@
                     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                     xmlns:dialogs="clr-namespace:wpf_material_dialogs.Dialogs;assembly=wpf-material-dialogs"
                     xmlns:wpfMaterialWpfTest="clr-namespace:wpf_material_wpfTest"
-                    xmlns:forms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms">
- <DataTemplate DataType="{x:Type wpfMaterialWpfTest:CustomDialog}">
-                               <Grid>
-                        <Grid.RowDefinitions>
-                            <!--Title row-->
-                            <RowDefinition Height="36" />
-                            <!--Separator row-->
-                            <RowDefinition Height="Auto" />
-                            <!--Icon, Supporting text row-->
-                            <RowDefinition Height="*" />
-                            <!--Buttons row-->
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0"
+                    xmlns:forms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+                    xmlns:wpfMaterialDialogs="clr-namespace:wpf_material_dialogs;assembly=wpf-material-dialogs">
+    <DataTemplate DataType="{x:Type wpfMaterialWpfTest:CustomDialog}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <!--Title row-->
+                <RowDefinition Height="36" />
+                <!--Separator row-->
+                <RowDefinition Height="Auto" />
+                <!--Icon, Supporting text row-->
+                <RowDefinition Height="*" />
+                <!--Buttons row-->
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0"
                                    VerticalAlignment="Center"
                                    HorizontalAlignment="Left"
                                    Margin="3 3 3 0"
                                    FontSize="24"
                                    TextTrimming="CharacterEllipsis" Style="{StaticResource  MaterialDesignHeadline6TextBlock}"
                                    Text="Hard Coded Text 24px" />
-                        <Separator Grid.Row="1"
+            <Separator Grid.Row="1"
                                    Height="5"
                                    VerticalAlignment="Center"
                                    Style="{DynamicResource MaterialDesignSeparator}" />
 
-                        <TextBlock Grid.Row="2"
+            <TextBlock Grid.Row="2"
                                    VerticalAlignment="Center"
                                    HorizontalAlignment="Left"
                                    Margin="3 3 3 0"
                                    TextTrimming="CharacterEllipsis" Style="{StaticResource  MaterialDesignHeadline6TextBlock}"
                                    Text="{Binding SubTitle}"  />
 
-                        <Grid Grid.Row="3">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
-                            <Button  Grid.Column="0"
-                                     Content="_Cancel"
-                                     Margin="0 0 3 0"
-                                     Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
-                                     Background="AliceBlue"
-                                     Foreground="Red"
-                                     CommandParameter="{x:Static forms:DialogResult.Cancel}" />
-
-                            <Button  Grid.Column="1"
-                                     Content="_OK"
-                                     Margin="3 0 0 0"
-                                     Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
-                                     CommandParameter="{x:Static forms:DialogResult.OK}" />
-                        </Grid>
-                               </Grid>
-    </DataTemplate>    
+            <wpfMaterialDialogs:ButtonTemplateControl
+                                Grid.Row="3"
+                                Visibility="{Binding ShowButtons, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                ButtonAlignment="{Binding ButtonAlignment}"
+                                SelectedButtons="{Binding SelectedButtons}" materialDesign:ThemeAssist.Theme="Inherit"
+                                DataContext="{Binding}" />
+        </Grid>
+    </DataTemplate>
 </ResourceDictionary>

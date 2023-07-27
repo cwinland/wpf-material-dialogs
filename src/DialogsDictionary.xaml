@@ -1,7 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-                    xmlns:dialogs="clr-namespace:wpf_material_dialogs.Dialogs">
+                    xmlns:dialogs="clr-namespace:wpf_material_dialogs.Dialogs"
+                    xmlns:wpfMaterialDialogs="clr-namespace:wpf_material_dialogs">
     <DataTemplate DataType="{x:Type dialogs:DialogBase}">
         <Grid Width="{Binding Width}" Height="{Binding Height}">
             <Grid.RowDefinitions>
@@ -69,16 +70,15 @@
                                FontWeight="{Binding FontWeight}" />
                 </Grid>
             </ScrollViewer>
-
-            <ContentControl Grid.Row="3"
-                            Grid.Column="1"
-                            Grid.ColumnSpan="2"
-                            Margin="3 10 3 5"
-                            Height="33"
-                            VerticalContentAlignment="Bottom"
-                            HorizontalAlignment="{Binding ButtonAlignment}"
-                            Content="{Binding SelectedButtons}" materialDesign:ThemeAssist.Theme="Inherit" />
-
+            <wpfMaterialDialogs:ButtonTemplateControl
+                Grid.Row="3"
+                Grid.Column="1"
+                Grid.ColumnSpan="2"
+                Visibility="{Binding ShowButtons, Converter={StaticResource BooleanToVisibilityConverter}}"
+                ButtonAlignment="{Binding ButtonAlignment}"
+                SelectedButtons="{Binding SelectedButtons}"
+                DataContext="{Binding}"
+                />
         </Grid>
     </DataTemplate>
 </ResourceDictionary>

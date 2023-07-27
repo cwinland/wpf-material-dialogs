@@ -1,17 +1,17 @@
 ﻿using MaterialDesignThemes.Wpf;
-using System.ComponentModel;
 using System.Windows.Media;
 using wpf_material_dialogs.Enums;
 
 namespace wpf_material_dialogs.Dialogs
 {
+    /// <inheritdoc />
     /// <summary>
     /// Information Dialog.
-    /// Implements the <see cref="DialogBase" />
-    /// Implements the <see cref="INotifyPropertyChanged" />
+    /// Implements the <see cref="T:wpf_material_dialogs.Dialogs.DialogBase" />
+    /// Implements the <see cref="T:System.ComponentModel.INotifyPropertyChanged" />
     /// </summary>
-    /// <seealso cref="DialogBase" />
-    /// <seealso cref="INotifyPropertyChanged" />
+    /// <seealso cref="T:wpf_material_dialogs.Dialogs.DialogBase" />
+    /// <seealso cref="T:System.ComponentModel.INotifyPropertyChanged" />
     public class InfoDialog : DialogBase
     {
         /// <summary>
