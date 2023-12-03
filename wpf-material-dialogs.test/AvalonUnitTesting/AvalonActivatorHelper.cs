@@ -9,7 +9,7 @@ namespace wpf_material_dialogs.test.AvalonUnitTesting
     internal static class AvalonActivatorHelper
     {
         /// <summary>
-        /// wrapps a control in a window so that it can be unit tested
+        /// wraps a control in a window so that it can be unit tested
         /// </summary>
         private class ControlWrapper : Window
         {

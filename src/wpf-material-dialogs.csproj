@@ -1,20 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
-    <TargetFrameworks>net472;net6.0-windows;net7.0-windows</TargetFrameworks>
+    <TargetFrameworks>net472;net6.0-windows;net7.0-windows;net8.0-windows</TargetFrameworks>
     <AssemblyTitle>Material Design WPF Dialogs</AssemblyTitle>
     <UseWindowsForms>true</UseWindowsForms>
     <LangVersion>latest</LangVersion>
     <UseWPF>true</UseWPF>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <NoWarn></NoWarn>
-    <PlatformTarget>x64</PlatformTarget>
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <WarningsAsErrors>1591</WarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <WarningsAsErrors>1591</WarningsAsErrors>
-    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup>
     <RootNamespace>wpf_material_dialogs</RootNamespace>
@@ -41,7 +40,6 @@
     <Copyright>copyright(c) 2021 Christopher Winland</Copyright>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net472|AnyCPU'">
-    <PlatformTarget>x64</PlatformTarget>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
   </PropertyGroup>
   <Target Name="SetPackageVersion">
@@ -53,6 +51,7 @@
   <ItemGroup>
     <PackageReference Include="MaterialDesignColors" Version="2.0.3" />
     <PackageReference Include="MaterialDesignThemes" Version="4.2.1" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.*" PrivateAssets="Analyzers" />
   </ItemGroup>
 
   <ItemGroup>

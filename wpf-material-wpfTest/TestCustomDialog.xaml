@@ -6,13 +6,14 @@
              xmlns:forms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:wpfMaterialDialogs="clr-namespace:wpf_material_dialogs;assembly=wpf-material-dialogs"
+             xmlns:wpfMaterialWpfTest="clr-namespace:wpf_material_wpfTest"
              mc:Ignorable="d" 
              Height="Auto" Width="500"
              d:DesignHeight="450" d:DesignWidth="500">
     <UserControl.Resources>
         <Style TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignFlatAccentBgButton}">
             <Setter Property="Margin" Value="5" />
-            <Setter Property="Command" Value="{Binding CloseCommand, RelativeSource={RelativeSource AncestorType={x:Type Control}}}" />
+            <Setter Property="Command" Value="{Binding CloseCommand, RelativeSource={RelativeSource AncestorType={x:Type wpfMaterialWpfTest:TestCustomDialog}}}" />
         </Style>
     </UserControl.Resources>
     <Grid Margin="5">
