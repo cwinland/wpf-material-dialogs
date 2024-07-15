@@ -1,4 +1,4 @@
-name: tests
+name: Run Windows Tests
 
 on: [push, pull_request]
 
@@ -8,6 +8,7 @@ jobs:
 
     strategy:
       matrix:
+        language: [ 'csharp' ]
         configuration: [Release]
 
     runs-on: windows-latest  # For a list of available runner types, refer to

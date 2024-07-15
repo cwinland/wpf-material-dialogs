@@ -1,6 +1,6 @@
-name: Build and Test .NET Projects
+name: CodeQL Analysis
 
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
   build-and-test:
