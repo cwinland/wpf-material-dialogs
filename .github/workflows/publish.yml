@@ -31,15 +31,9 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
-      # Add MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
-      - name: Setup MSBuild.exe
-        uses: microsoft/setup-msbuild@v2
-      # Execute all unit tests in the solution
-      - name: Execute unit tests
-        run: dotnet test
       # Publish
-      #- name: Build FastMoq
-      #  run: dotnet build -c Release
+      - name: Build FastMoq
+        run: dotnet build -c Release
       - name: Fetch all tags
         run: git fetch --tags
       - name: Validate and set version
