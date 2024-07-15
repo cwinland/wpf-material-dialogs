@@ -1,0 +1,82 @@
+name: Test and Publish
+
+on:
+  release:
+    types: [published]
+  push:
+    branches:
+      - master # Release branch
+    paths:
+      - .github/workflows/publish.yml
+
+jobs:
+
+  build:
+
+    strategy:
+      matrix:
+        language: [ 'csharp' ]
+        configuration: [Release]
+
+    runs-on: windows-latest  # For a list of available runner types, refer to
+                             # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
+
+    env:
+      Solution_Name: wpf-material-dialogs.sln                         # Replace with your solution name, i.e. MyWpfApp.sln.
+      Test_Project_Path: wpf-material-dialogs.test\wpf-material-dialogs.test.csproj                 # Replace with the path to your test project, i.e. MyWpfApp.Tests\MyWpfApp.Tests.csproj.
+      Wap_Project_Directory: src    # Replace with the Wap project directory relative to the solution, i.e. MyWpfApp.Package.
+      Wap_Project_Path: src\wpf-material-dialogs.csproj                   # Replace with the path to your Wap project, i.e. MyWpf.App.Package\MyWpfApp.Package.wapproj.
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    # Install the .NET Core workload
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v2
+
+    # Execute all unit tests in the solution
+    - name: Execute unit tests
+      run: dotnet test
+
+    # Publish
+    #- name: Build FastMoq
+    #  run: dotnet build -c Release
+
+    - name: Fetch all tags
+      run: git fetch --tags
+
+    - name: Validate and set version
+      id: validate
+      run: |
+        TAG=$(git describe --tags $(git rev-list --tags --max-count=1))
+        VERSION=${TAG#v} # Remove 'v' from the beginning of the tag
+        if [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?(\+[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$ ]]; then
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+        else
+          echo "Error: Latest tag ($TAG) is not a valid SemVer version"
+          exit 1
+        fi
+        
+    - name: Creating a package
+      run: dotnet pack FastMoq-Release.sln --no-build -c Release -o . /p:PackageVersion=${{ env.VERSION }}
+
+    - name: Push to NuGet
+      id: push
+      run: |
+        OUTPUT=$(dotnet nuget push *.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}} --skip-duplicate)
+        echo "$OUTPUT"
+        if [[ $OUTPUT == *"Your package was pushed"* ]]; then
+          echo "Push successful"
+        else
+          echo "Push failed"
+          exit 1
+        fi
