@@ -15,7 +15,7 @@ jobs:
       matrix:
         language: [ 'csharp' ]
         configuration: [Release]
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     env:
       Solution_Name: wpf-material-dialogs.sln
       Test_Project_Path: wpf-material-dialogs.test\wpf-material-dialogs.test.csproj
