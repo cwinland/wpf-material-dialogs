@@ -1,15 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31624.102
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34316.72
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "wpf-material-dialogs", "src\wpf-material-dialogs.csproj", "{DB04B9E7-952D-4F8A-8A9E-31C3D223DA2F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "wpf-material-dialogs.test", "wpf-material-dialogs.test\wpf-material-dialogs.test.csproj", "{46927F38-1C0F-40BB-88D5-E9FEF374356E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "wpf-material-wpfTest", "wpf-material-wpfTest\wpf-material-wpfTest.csproj", "{441E0B86-9D05-4A1C-BB12-6C966FF8F890}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wpf-material-wpftestFramework", "wpf-material-wpftestFramework\wpf-material-wpftestFramework.csproj", "{8183930B-C5AE-4C65-8721-DD9BE6B5D879}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +27,6 @@ Global
 		{441E0B86-9D05-4A1C-BB12-6C966FF8F890}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{441E0B86-9D05-4A1C-BB12-6C966FF8F890}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{441E0B86-9D05-4A1C-BB12-6C966FF8F890}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8183930B-C5AE-4C65-8721-DD9BE6B5D879}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8183930B-C5AE-4C65-8721-DD9BE6B5D879}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8183930B-C5AE-4C65-8721-DD9BE6B5D879}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8183930B-C5AE-4C65-8721-DD9BE6B5D879}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

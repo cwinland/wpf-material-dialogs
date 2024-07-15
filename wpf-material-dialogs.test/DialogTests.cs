@@ -1,6 +1,5 @@
 using FluentAssertions;
 using MaterialDesignThemes.Wpf;
-using NUnit.Framework;
 using System;
 using System.Reflection;
 using System.Threading;
@@ -11,16 +10,19 @@ using System.Windows.Media;
 using wpf_material_dialogs.Dialogs;
 using wpf_material_dialogs.Enums;
 using wpf_material_dialogs.Interfaces;
+using Xunit;
 
 namespace wpf_material_dialogs.test
 {
-    [NUnit.Framework.Ignore("base class")]
-    internal class DialogTestBase<TDialog> : IDisposable where TDialog : IDialog, new()
+    [Collection("tests")]
+    [CollectionDefinition("test", DisableParallelization = true)]
+    public abstract class DialogTestBase<TDialog> : IDisposable where TDialog : IDialog, new()
     {
         private DialogHost dialogHost;
         private IDialog testDialog;
 
-        [SetUp]
+        protected DialogTestBase() => SetupTests();
+
         public void SetupTests()
         {
             var mi = typeof(DialogHost).GetMethod("GetInstance", BindingFlags.NonPublic | BindingFlags.Static);
@@ -34,7 +36,7 @@ namespace wpf_material_dialogs.test
             }
 
             dialogHost ??= new DialogHost();
-            dialogHost?.RaiseEvent(new RoutedEventArgs(FrameworkElement.LoadedEvent));
+            dialogHost.RaiseEvent(new RoutedEventArgs(FrameworkElement.LoadedEvent));
             //_dialogHost.Identifier = hostId;
             testDialog = new TDialog
             {
@@ -49,7 +51,7 @@ namespace wpf_material_dialogs.test
 
         public void Dispose() => dialogHost?.RaiseEvent(new RoutedEventArgs(FrameworkElement.UnloadedEvent));
 
-        [Test]
+        [StaFact]
         public void CanOpenAndCloseDialogWithShowDialogIsOpen()
         {
             dialogHost.IsOpen = false;
@@ -63,7 +65,7 @@ namespace wpf_material_dialogs.test
             session?.IsEnded.Should().BeTrue();
         }
 
-        [Test]
+        [StaFact]
         public async Task CanOpenAndCloseDialogWithShowMethodDialogResult()
         {
             var id = Guid.NewGuid();
@@ -75,7 +77,7 @@ namespace wpf_material_dialogs.test
             dialogHost.IsOpen.Should().BeFalse();
         }
 
-        [Test]
+        [StaFact]
         public async Task CanOpenAndCloseDialogWithShowMethodAnyObject()
         {
             var result = await OpenTestDialogObject(testDialog, (sender, args) => args.Session.Close(42));
@@ -84,7 +86,7 @@ namespace wpf_material_dialogs.test
             dialogHost.IsOpen.Should().BeFalse();
         }
 
-        [Test]
+        [StaFact]
         public async Task CanOpenDialogWithShowMethodAndCloseWithIsOpen()
         {
             var result = await OpenTestDialogObject(testDialog, (sender, args) => dialogHost.IsOpen = false);
@@ -93,7 +95,7 @@ namespace wpf_material_dialogs.test
             dialogHost.IsOpen.Should().BeFalse();
         }
 
-        [Test]
+        [StaFact]
         public async Task CanCloseDialogWithRoutedEvent()
         {
             var closeParameter = Guid.NewGuid();
@@ -103,15 +105,15 @@ namespace wpf_material_dialogs.test
             Assert.False(session?.IsEnded ?? false);
 
             DialogHost.CloseDialogCommand.Execute(closeParameter, dialogHost);
-            Thread.Sleep(200);
+            Thread.Yield();
             Assert.False(dialogHost.IsOpen);
             Assert.Null(dialogHost.CurrentSession);
             Assert.True(session?.IsEnded ?? false);
             Task.WaitAll(showTask);
-            Assert.AreEqual(closeParameter, await showTask);
+            Assert.Equivalent(closeParameter, await showTask);
         }
 
-        [Test]
+        [StaFact]
         public async Task DialogHostExposesSessionAsProperty() =>
             await OpenTestDialogObject(testDialog,
                                        (sender, args) =>
@@ -120,7 +122,7 @@ namespace wpf_material_dialogs.test
                                            args.Session.Close();
                                        });
 
-        [Test]
+        [StaFact]
         public async Task WhenNoIdentifierIsSpecifiedItUsesSingleDialogHost()
         {
             var isOpen = false;
@@ -133,7 +135,7 @@ namespace wpf_material_dialogs.test
             isOpen.Should().BeTrue();
         }
 
-        [Test]
+        [StaFact]
         public async Task WhenContentIsUpdatedClosingEventHandlerIsInvoked()
         {
             var closeInvokeCount = 0;
@@ -153,15 +155,15 @@ namespace wpf_material_dialogs.test
             dialogHost.CurrentSession?.Close("SecondResult");
             var result = await dialogTask;
 
-            Assert.AreEqual("SecondResult", result);
-            Assert.AreEqual(2, closeInvokeCount);
+            Assert.Equivalent("SecondResult", result);
+            Assert.Equivalent(2, closeInvokeCount);
         }
 
-        [Test]
+        [StaFact]
         public void WhenOpenDialogsAreOpenIsExist()
         {
             var isExist = false;
-            OpenTestDialogObject(testDialog, (sender, arg) => isExist = DialogHost.IsDialogOpen(dialogHost.Identifier));
+            _ = OpenTestDialogObject(testDialog, (sender, arg) => isExist = DialogHost.IsDialogOpen(dialogHost.Identifier));
             Assert.True(isExist);
             DialogHost.Close(dialogHost.Identifier);
             Assert.False(DialogHost.IsDialogOpen(dialogHost.Identifier));
@@ -183,23 +185,19 @@ namespace wpf_material_dialogs.test
         }
     }
 
-    [Apartment(ApartmentState.STA)]
-    internal class AlertDialogTests : DialogTestBase<AlertDialog>
+    public class AlertDialogTests : DialogTestBase<AlertDialog>
     {
     }
 
-    [Apartment(ApartmentState.STA)]
-    internal class ErrorDialogTests : DialogTestBase<ErrorDialog>
+    public class ErrorDialogTests : DialogTestBase<ErrorDialog>
     {
     }
 
-    [Apartment(ApartmentState.STA)]
-    internal class InfoDialogTests : DialogTestBase<InfoDialog>
+    public class InfoDialogTests : DialogTestBase<InfoDialog>
     {
     }
 
-    [Apartment(ApartmentState.STA)]
-    internal class WarningDialogTests : DialogTestBase<WarningDialog>
+    public class WarningDialogTests : DialogTestBase<WarningDialog>
     {
     }
 }

@@ -1,64 +1,69 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
-  <PropertyGroup>
-    <TargetFrameworks>net472;net6.0-windows;net7.0-windows</TargetFrameworks>
-    <AssemblyTitle>Material Design WPF Dialogs</AssemblyTitle>
-    <UseWindowsForms>true</UseWindowsForms>
-    <LangVersion>latest</LangVersion>
-    <UseWPF>true</UseWPF>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <NoWarn></NoWarn>
-    <PlatformTarget>x64</PlatformTarget>
-    <RunCodeAnalysis>false</RunCodeAnalysis>
-    <WarningsAsErrors>1591</WarningsAsErrors>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <WarningsAsErrors>1591</WarningsAsErrors>
-    <PlatformTarget>x64</PlatformTarget>
-  </PropertyGroup>
-  <PropertyGroup>
-    <RootNamespace>wpf_material_dialogs</RootNamespace>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Authors>Christopher Winland</Authors>
-    <Company>Microsoft Corporation</Company>
-    <PackageProjectUrl>https://github.com/cwinland/wpf-material-dialogs</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/cwinland/wpf-material-dialogs</RepositoryUrl>
-    <RepositoryType>GitHub</RepositoryType>
-    <PackageTags>WPF Dialogs Core Framework NET Custom Easy</PackageTags>
-    <PackageDescription>Common and customizable dialogs made easier in WPF using MaterialDesignThemes.</PackageDescription>
-    <Title>WPF Material Dialogs</Title>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyVersion>1.$([System.DateTime]::Now.ToString("y.MM.ddHH"))</AssemblyVersion>
-    <FileVersion>1.$([System.DateTime]::Now.ToString("y.MM.ddHH"))</FileVersion>
-    <Version>2.$([System.DateTime]::Now.ToString("y.MM.ddHH"))</Version>
-  </PropertyGroup>
-  <PropertyGroup>
-    <GenerateNuspecDependsOn>$(GenerateNuspecDependsOn);SetPackageVersion</GenerateNuspecDependsOn>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <Description>Common and customizable dialogs made easier in WPF using MaterialDesignThemes.</Description>
-    <Copyright>copyright(c) 2021 Christopher Winland</Copyright>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net472|AnyCPU'">
-    <PlatformTarget>x64</PlatformTarget>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-  </PropertyGroup>
-  <Target Name="SetPackageVersion">
     <PropertyGroup>
-      <PackageVersion>1.$([System.DateTime]::Now.ToString("y.MM.ddHH"))</PackageVersion>
+        <TargetFrameworks>net6.0-windows;net8.0-windows</TargetFrameworks>
+        <AssemblyTitle>Material Design WPF Dialogs</AssemblyTitle>
+        <UseWindowsForms>true</UseWindowsForms>
+        <LangVersion>latest</LangVersion>
+        <UseWPF>true</UseWPF>
+        <PlatformTarget>AnyCPU</PlatformTarget>
+        <EnableWindowsTargeting>true</EnableWindowsTargeting>
     </PropertyGroup>
-  </Target>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <NoWarn></NoWarn>
+        <RunCodeAnalysis>false</RunCodeAnalysis>
+        <WarningsAsErrors>1591</WarningsAsErrors>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+        <WarningsAsErrors>1591</WarningsAsErrors>
+    </PropertyGroup>
+    <PropertyGroup>
+        <RootNamespace>wpf_material_dialogs</RootNamespace>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <Authors>Christopher Winland</Authors>
+        <Company>Microsoft Corporation</Company>
+        <PackageProjectUrl>https://github.com/cwinland/wpf-material-dialogs</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/cwinland/wpf-material-dialogs</RepositoryUrl>
+        <RepositoryType>GitHub</RepositoryType>
+        <PackageTags>WPF Dialogs Core Framework NET Custom Easy</PackageTags>
+        <PackageDescription>Common and customizable dialogs made easier in WPF using MaterialDesignThemes.</PackageDescription>
+        <Title>WPF Material Dialogs</Title>
+    </PropertyGroup>
+    <PropertyGroup>
+        <AssemblyVersion>1.$([System.DateTime]::Now.ToString("y.MM.ddHH"))</AssemblyVersion>
+        <FileVersion>1.$([System.DateTime]::Now.ToString("y.MM.ddHH"))</FileVersion>
+        <Version>2.$([System.DateTime]::Now.ToString("y.MM.ddHH"))</Version>
+    </PropertyGroup>
+    <PropertyGroup>
+        <GenerateNuspecDependsOn>$(GenerateNuspecDependsOn);SetPackageVersion</GenerateNuspecDependsOn>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <Description>Common and customizable dialogs made easier in WPF using MaterialDesignThemes.</Description>
+        <Copyright>copyright(c) 2021 Christopher Winland</Copyright>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net472|AnyCPU'">
+        <DefineConstants>DEBUG;TRACE</DefineConstants>
+    </PropertyGroup>
+    <Target Name="SetPackageVersion">
+        <PropertyGroup>
+            <PackageVersion>1.$([System.DateTime]::Now.ToString("y.MM.ddHH"))</PackageVersion>
+        </PropertyGroup>
+    </Target>
 
-  <ItemGroup>
-    <PackageReference Include="MaterialDesignColors" Version="2.0.3" />
-    <PackageReference Include="MaterialDesignThemes" Version="4.2.1" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="MaterialDesignColors" Version="2.0.3" />
+        <PackageReference Include="MaterialDesignThemes" Version="4.2.1" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.*" PrivateAssets="Analyzers" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
+    <ItemGroup>
+        <None Include="..\LICENSE">
+            <Pack>True</Pack>
+            <PackagePath></PackagePath>
+        </None>
+        <None Include="..\README.md">
+          <Pack>True</Pack>
+          <PackagePath>\</PackagePath>
+        </None>
+    </ItemGroup>
 </Project>
