@@ -3,7 +3,7 @@ name: Build and Test .NET Projects
 on:
   push:
     branches:
-      - main  # Adjust the branch name as needed
+      - master  # Adjust the branch name as needed
 
 jobs:
   build-and-test:
