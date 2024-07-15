@@ -9,7 +9,7 @@
         <UseWPF>true</UseWPF>
         <PlatformTarget>AnyCPU</PlatformTarget>
         <IsPackable>false</IsPackable>
-        <IsTestProject>true</IsTestProject>
+        <IsTestProject>false</IsTestProject>
         <EnableWindowsTargeting>true</EnableWindowsTargeting>
     </PropertyGroup>
 

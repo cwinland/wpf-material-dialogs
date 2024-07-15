@@ -39,6 +39,7 @@
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <Description>Common and customizable dialogs made easier in WPF using MaterialDesignThemes.</Description>
         <Copyright>copyright(c) 2021 Christopher Winland</Copyright>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net472|AnyCPU'">
         <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -59,6 +60,10 @@
         <None Include="..\LICENSE">
             <Pack>True</Pack>
             <PackagePath></PackagePath>
+        </None>
+        <None Include="..\README.md">
+          <Pack>True</Pack>
+          <PackagePath>\</PackagePath>
         </None>
     </ItemGroup>
 </Project>
