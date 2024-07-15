@@ -67,7 +67,7 @@ jobs:
         fi
         
     - name: Creating a package
-      run: dotnet pack FastMoq-Release.sln --no-build -c Release -o . /p:PackageVersion=${{ env.VERSION }}
+      run: dotnet pack wpf-material-dialogs.sln --no-build -c Release -o . /p:PackageVersion=${{ env.VERSION }}
 
     - name: Push to NuGet
       id: push
