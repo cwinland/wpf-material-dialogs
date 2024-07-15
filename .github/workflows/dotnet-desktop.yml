@@ -50,7 +50,7 @@ jobs:
 
     # Run tests using the existing restore
     - name: Run Tests
-      run: dotnet test --no-build --no-restore -f ${{ matrix.language }}
+      run: dotnet test --no-build --no-restore
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
